@@ -16,18 +16,21 @@
             const fileUrl = urlParams.get('fileUrl');  // Get the file URL from the query parameter
 
             if (fileUrl) {
-                // Fetch the file from the provided URL
+                // Extract the file name from the URL
+                const fileName = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
+
+                // Fetch the image or file as a blob (binary data)
                 fetch(fileUrl)
-                    .then(response => response.blob())  // Convert response to a blob
+                    .then(response => response.blob())  // Convert response to a binary blob
                     .then(blob => {
                         const zip = new JSZip();  // Create a new JSZip instance
-                        zip.file("downloaded_file", blob);  // Add the fetched file to the zip
+                        zip.file(fileName, blob, {binary: true});  // Add the binary file to the zip with the correct filename
 
                         // Generate the zip file and trigger download
                         zip.generateAsync({ type: "blob" }).then(function(content) {
                             const zipLink = document.createElement('a');  // Create a hidden download link
                             zipLink.href = URL.createObjectURL(content);  // Create a URL for the zip
-                            zipLink.setAttribute('download', 'files.zip');  // Name the downloaded file as "files.zip"
+                            zipLink.setAttribute('download', 'files.zip');  // Name the downloaded zip as "files.zip"
                             document.body.appendChild(zipLink);  // Append the link to the body
                             zipLink.click();  // Trigger the download
                             zipLink.remove();  // Clean up by removing the link
