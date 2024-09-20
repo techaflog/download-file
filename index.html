@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Download File</title>
+</head>
+<body>
+    <h1>File Download Trigger</h1>
+    <p id="status">Preparing to download...</p>
+    <script>
+        // Wait for the window to load completely to ensure all resources are available
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fileUrl = urlParams.get('fileUrl'); // The URL of the file to download
+
+            if (fileUrl) {
+                const downloadLink = document.createElement('a');
+                downloadLink.href = fileUrl;
+                downloadLink.setAttribute('download', 'downloaded_file'); // Forces the download with a default file name
+                document.body.appendChild(downloadLink);
+                
+                // Timeout to handle download more reliably across browsers
+                setTimeout(function() {
+                    downloadLink.click(); // Simulate click to trigger download
+                    downloadLink.remove(); // Clean up
+                    document.getElementById('status').textContent = 'If your download did not start, click here: ';
+                    const retryLink = document.createElement('a');
+                    retryLink.href = fileUrl;
+                    retryLink.setAttribute('download', 'downloaded_file'); // Retry download link
+                    retryLink.textContent = 'Download File';
+                    document.getElementById('status').appendChild(retryLink);
+                }, 1000); // Delay to ensure scripts and DOM are fully ready
+            } else {
+                document.getElementById('status').textContent = 'No file URL provided.';
+            }
+        }
+    </script>
+</body>
+</html>
