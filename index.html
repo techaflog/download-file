@@ -34,6 +34,11 @@
                             document.body.appendChild(zipLink);  // Append the link to the body
                             zipLink.click();  // Trigger the download
                             zipLink.remove();  // Clean up by removing the link
+                            
+                            // Wait a short delay and attempt to close the tab
+                            setTimeout(function() {
+                                window.close();  // Close the current tab if opened by JavaScript
+                            }, 2000);  // Adjust the delay as needed
                         });
                     })
                     .catch(error => {
